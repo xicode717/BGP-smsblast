@@ -7,13 +7,14 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>SMS BLAST</h1>
+            <h1>Pengguna</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">DataTables</li> -->
-              <a href="{{ url('send/sendsmsview') }}" class="btn btn-block btn-primary">Send Sms</a>
+              <!-- <a href="{{ url('') }}" class="btn btn-block btn-primary">Send Sms</a> -->
+              <a type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-lg">Tambah</a>
             </ol>
           </div>
         </div>
@@ -29,7 +30,7 @@
             
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">List Blast</h3>
+                <h3 class="card-title">List Pengguna</h3>
                 
               </div>
               <!-- /.card-header -->
@@ -39,9 +40,8 @@
                   <tr>
                     <th>No</th>
                     <th>Nama</th>
-                    <th>Phone</th>
-                    <th>Pesan</th>
-                    <th>Tgl Kirim</th>
+                    <th>Email</th>
+                    <th>Akses</th>
                     <th>Opsi</th>
                   </tr>
                   </thead>
@@ -49,25 +49,23 @@
                   @php 
                     $no=1;
                     @endphp
-                    @foreach($list as $v)
+                    @foreach($user as $v)
                   <tr>
                     <td>{{ $no }}</td>
-                    <td>{{ $v->nama}}</td>
-                    <td>{{$v->phone}}</td>
-                    <td>{{$v->pesan}}</td>
-                    <td>{{ $v->tgl_kirim }}</td>
+                    <td>{{ $v->name}}</td>
+                    <td>{{$v->email}}</td>
+                    <td>{{$v->akses == 1 ? 'Admin' : 'User'}}</td>
                     <td>
                     <div class="btn-group-vertical">
                         <div class="btn-group">
                           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                           </button>
                           <ul class="dropdown-menu" style="">
-                            <!-- <li><a class="dropdown-item" href="{{ url('smsblast/'.$v->id.'/edit') }}">Resend</a></li> -->
-
-                            <form method="post" action="{{ url('smsblast/resend', $v->id) }}">
+                            <li><a class="dropdown-item" href="{{ url('users/'.$v->id.'/edit') }}">Edit</a></li>
+                            <!-- <form method="post" action="{{ url('smsblast/resend', $v->id) }}">
                                 @csrf
                                 <li><button type="submit" class="dropdown-item">Resend</button></li>
-                            </form>
+                            </form> -->
                           </ul>
                         </div>
                       </div>
@@ -93,6 +91,51 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+  <div class="modal fade" id="modal-lg">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Form User</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form method="post" action="{{ url('/users') }}">
+        @csrf
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Nama</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Nama">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email</label>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Password</label>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Akses</label>
+                    <select name="akses" class="form-control" id="akses">
+                        <option value="2">User</option>
+                        <option value="1">Administrator </option>
+                    </select>
+                </div>
+            </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+        </div>
+        </form>
+        <!-- /.modal-content -->
+    </div>
+        <!-- /.modal-dialog -->
+   </div>
+      <!-- /.modal -->
 
   @endsection
 

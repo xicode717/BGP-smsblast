@@ -13,8 +13,8 @@
             <ol class="breadcrumb float-sm-right">
               <!-- <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">DataTables</li> -->
-              <a type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-lg">Add</a>
-              <a type="button" class="btn btn-block btn-secondary">Upload Excel</a>
+              <a type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-lg">Tambah</a>
+              <a type="button" class="btn btn-block btn-secondary">Unggah Excel</a>
             </ol>
           </div>
         </div>
@@ -142,8 +142,8 @@
                 </div>
             </div>
         <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
         </div>
         </form>

@@ -226,11 +226,10 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ url('users') }}" class="nav-link {{Request::is('users') ? 'active' : ''}}">
               <i class="nav-icon fas fa-th"></i>
               <p>
-                Widgets
-                <span class="right badge badge-danger">New</span>
+                Users
               </p>
             </a>
           </li>

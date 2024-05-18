@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasterClientController;
 use App\Http\Controllers\SMSBlastController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('/master-client', MasterClientController::class);
 Route::resource('/smsblast', SMSBlastController::class);
 Route::get('/send/sendsmsview', [App\Http\Controllers\SMSBlastController::class, 'sendsmsview'])->name('sendsmsview');
+Route::post('/smsblast/resend/{phone}', [App\Http\Controllers\SMSBlastController::class, 'resend'])->name('resend');
+Route::resource('/users', UsersController::class);
 
 Route::get('/logout', function(){
     \Auth::logout();

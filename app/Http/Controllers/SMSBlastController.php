@@ -16,6 +16,12 @@ class SMSBlastController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }  
+    
     public function index()
     {
         $data = [
@@ -64,8 +70,10 @@ class SMSBlastController extends Controller
                     'pesan'         => $request->pesan,
                     'tgl_kirim'     => date('Y-m-d'),
                     'status'        => 1,
-                    'created_at'    => date('Y-m-d H:i:s')
+                    'created_at'    => date('Y-m-d H:i:s'),
+                    'udpated_at'    => null
                 );
+                $this->sendwa($val->phone, $request->pesan);
                 $insert = MSMSBlast::create($data);
             }
         }
@@ -73,6 +81,34 @@ class SMSBlastController extends Controller
         Alert::success('Berhasil!', 'Pembayaran Berhasil di Tambahkan!');
          
          return back();
+    }
+
+    public function resend($id)
+    {
+        if(empty($id))
+        {
+            Alert::error('Gagal!', 'Tidak ada data');
+        }
+        else{
+            $data = MSMSBlast::find($id);
+            $create = MSMSBlast::create([
+                'id_client'     => $data['id_client'],
+                'phone'         => $data['phone'],
+                'pesan'         => $data['pesan'],
+                'tgl_kirim'     => date('Y-m-d'),
+                'status'        => 1,
+                'created_at'    => date('Y-m-d H:i:s'),
+                'udpated_at'    => null
+            ]);
+            $this->sendwa($data['phone'], $data['pesan']);
+            if($create)
+            {
+                Alert::success('Berhasil!', 'Pesan berhasil di resend');
+            }else{
+                Alert::error('Gagal', 'Pesan sedang dalam kendala');
+            }
+        }
+        
     }
 
     /**
@@ -118,5 +154,40 @@ class SMSBlastController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function sendwa($phone, $pesan)
+    {
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+            'target' => $phone,
+            'message' => $pesan, 
+            'countryCode' => '62', //optional
+            ),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: zXGH2mayNLbaDhwYuWM7' //change TOKEN to your actual token
+            ),
+            ));
+
+            $response = curl_exec($curl);
+            if (curl_errno($curl)) {
+            $error_msg = curl_error($curl);
+            }
+            curl_close($curl);
+
+            // if (isset($error_msg)) {
+            // echo $error_msg;
+            // }
+            // echo $response;
     }
 }

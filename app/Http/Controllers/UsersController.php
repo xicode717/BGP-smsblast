@@ -4,29 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\MMasterClient;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Hash;
 
-class MasterClientController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $data = [
-            'client' => MMasterClient::all(),
+            'user' => User::all(),
         ];
-        
-        return view('master.client.index', $data);
+        return view('users.index', $data);
     }
 
     /**
@@ -53,30 +47,28 @@ class MasterClientController extends Controller
             'min' => ':attribute minimal harus :min angka',
             'max' => ':attribute maksimal harus :max angka',
          ];
-         $request->validate([
-            'nama' => 'required',
+         $validasi = $request->validate([
+            'name' => 'required',
             'email' => 'required',
-            'phone' => 'required|numeric|min:11',
-            'gender' => 'required',
-            'tgl_lahir' => 'required',
-            'alamat' => 'required'
+            'password' => 'required',
+            'akses' => 'required',
          ], $message);
 
+        if($validasi) :
          $data = array(
-            'nama' => $request->nama,
+            'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
-            'gender' => $request->gender,
-            'tgl_lahir' => $request->tgl_lahir,
-            'alamat' => $request->alamat,
+            'password' => Hash::make($request->password),
+            'akses' => $request->akses,
          );
-         $input = MMasterClient::create($data);
-         return redirect('master-client')->with('success', 'Master Client berhasil di tambah');
-        //  if($input){
-        //     return redirect('master-client')->with('success', 'Master Client berhasil di tambah');
-        //  }else{
-        //     return back()->with('errors', 'Master Client gagal  di tambah');
-        //  }
+         $input = User::create($data);
+            if($input) :
+                Alert::success('Berhasil!', 'Data Berhasil Ditambahkan');
+            else :
+                Alert::error('Gagal!', 'Data Gagal Ditambahkan');
+            endif;
+        endif;
+        return back();
     }
 
     /**
@@ -99,9 +91,10 @@ class MasterClientController extends Controller
     public function edit($id)
     {
         $data = [
-            'edit' => MMasterClient::find($id),
+            'edit' => User::find($id),
         ];
-        return view('master.client.edit', $data);
+
+        return view('users.edit', $data);
     }
 
     /**
@@ -120,28 +113,30 @@ class MasterClientController extends Controller
             'max' => ':attribute maksimal harus :max angka',
          ];
          $validasi = $request->validate([
-            'nama' => 'required',
+            'name' => 'required',
             'email' => 'required',
-            'phone' => 'required|numeric|min:11',
-            'gender' => 'required',
-            'tgl_lahir' => 'required',
-            'alamat' => 'required'
+            'akses' => 'required',
          ], $message);
 
+         $data = User::find($id);
+         if($request->password == ''){
+            $password = $data['password'];
+         }else{
+            $password = Hash::make($request->password);
+         }
+
         if($validasi) :            
-            $update = MMasterClient::find($id)->update([
-                'nama' => $request->nama,
+            $update = User::find($id)->update([
+                'name' => $request->name,
                 'email' => $request->email,
-                'phone' => $request->phone,
-                'gender' => $request->gender,
-                'tgl_lahir' => $request->tgl_lahir,
-                'alamat' => $request->alamat,
-                'status' => $request->status,
+                'password' => $password,
+                'akses' => $request->akses,
+                'udpated_at' => date('Y-m-d H:i:s'),
              ]);
               if($update) :
-                return redirect('master-client')->with('success', 'Master Client berhasil di ubah');
+                return redirect('users')->with('success', 'Data User berhasil di ubah');
                else :
-                return back()->with('errors', 'Master Client gagal  di ubah');
+                return back()->with('errors', 'Data User gagal  di ubah');
                endif;
         endif;
     }
@@ -154,12 +149,6 @@ class MasterClientController extends Controller
      */
     public function destroy($id)
     {
-        if(MMasterClient::find($id)->delete()) :
-            Alert::success('Berhasil!', 'Data Berhasil di Hapus');
-        else :
-            Alert::error('Terjadi Kesalahan!', 'Data Gagal di Hapus');
-        endif;
-      
-      return back();
+        //
     }
 }
