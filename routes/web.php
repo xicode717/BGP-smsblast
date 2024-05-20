@@ -32,6 +32,11 @@ Route::get('/send/sendsmsview', [App\Http\Controllers\SMSBlastController::class,
 Route::post('/smsblast/resend/{phone}', [App\Http\Controllers\SMSBlastController::class, 'resend'])->name('resend');
 Route::resource('/users', UsersController::class);
 
+// Datatables Server Side
+Route::get('/datatables/smsblast', [App\Http\Controllers\SMSBlastController::class, 'serverside'])->name('serverside');
+Route::get('/datatables/master-client', [App\Http\Controllers\MasterClientController::class, 'serverside'])->name('serverside');
+// end Datatables Server Side
+
 Route::get('/logout', function(){
     \Auth::logout();
     return redirect('/home');

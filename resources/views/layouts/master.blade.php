@@ -227,9 +227,9 @@
           </li>
           <li class="nav-item">
             <a href="{{ url('users') }}" class="nav-link {{Request::is('users') ? 'active' : ''}}">
-              <i class="nav-icon fas fa-th"></i>
+              <i class="nav-icon fa fa-user"></i>
               <p>
-                Users
+                Pengguna
               </p>
             </a>
           </li>

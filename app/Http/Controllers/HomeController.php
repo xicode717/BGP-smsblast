@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\MMasterClient;
+use App\Models\MSMSBlast;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('admin.home.index');
+        $data = [
+            'total_kirim'   => MSMSBlast::count(),
+            'total_user'    => MMasterClient::count(),
+        ];
+        return view('admin.home.index', $data);
     }
 }

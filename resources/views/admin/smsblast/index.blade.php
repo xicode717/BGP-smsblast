@@ -34,7 +34,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="datatables" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>No</th>
@@ -42,41 +42,11 @@
                     <th>Phone</th>
                     <th>Pesan</th>
                     <th>Tgl Kirim</th>
-                    <th>Opsi</th>
+                    <!-- <th>Opsi</th> -->
                   </tr>
                   </thead>
                   <tbody>
-                  @php 
-                    $no=1;
-                    @endphp
-                    @foreach($list as $v)
-                  <tr>
-                    <td>{{ $no }}</td>
-                    <td>{{ $v->nama}}</td>
-                    <td>{{$v->phone}}</td>
-                    <td>{{$v->pesan}}</td>
-                    <td>{{ $v->tgl_kirim }}</td>
-                    <td>
-                    <div class="btn-group-vertical">
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                          </button>
-                          <ul class="dropdown-menu" style="">
-                            <!-- <li><a class="dropdown-item" href="{{ url('smsblast/'.$v->id.'/edit') }}">Resend</a></li> -->
-
-                            <form method="post" action="{{ url('smsblast/resend', $v->id) }}">
-                                @csrf
-                                <li><button type="submit" class="dropdown-item">Resend</button></li>
-                            </form>
-                          </ul>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  @php
-                    $no++;
-                    @endphp
-                    @endforeach
+                  
                   </tbody>
                 </table>
               </div>
@@ -97,12 +67,27 @@
   @endsection
 
   @section('script')
-  <script>
+  <script type="text/javascript">
   $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": true, "autoWidth": false,
-      "buttons": ["csv", "excel", "pdf",]
+    // $("#datatables").DataTable({
+    //   "responsive": true, "lengthChange": true, "autoWidth": false,
+    //   "buttons": ["csv", "excel", "pdf",]
+    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    $("#datatables").DataTable({
+      processing: true,
+      serverSide: true,
+      responsive: true,
+      ajax: 'datatables/smsblast',
+      columns: [
+        {data: 'id', name: 'id'},
+        {data: 'nama', name: 'nama'},
+        {data: 'phone', name: 'phone'},
+        {data: 'pesan', name: 'pesan'},
+        {data: 'tgl_kirim', name: 'tgl_kirim'},
+      ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": true,

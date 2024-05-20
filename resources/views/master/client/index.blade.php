@@ -35,7 +35,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="datatables" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>No</th>
@@ -44,43 +44,11 @@
                     <th>Phone</th>
                     <th>Gender</th>
                     <th>Tgl Lahir</th>
-                    <th>Opsi</th>
+                    <!-- <th>Opsi</th> -->
                   </tr>
                   </thead>
                   <tbody>
-                  @php 
-                    $i=1;
-                    @endphp
-                    @foreach($client as $v)
-                  <tr>
-                    <td>{{ $i }}</td>
-                    <td>{{ $v->nama}}</td>
-                    <td>{{$v->email}}</td>
-                    <td>{{$v->phone}}</td>
-                    <td> {{$v->gender}} </td>
-                    <td>{{$v->tgl_lahir}}</td>
-                    <td>
-                    <div class="btn-group-vertical">
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                          </button>
-                          <ul class="dropdown-menu" style="">
-                            <li><a class="dropdown-item" href="{{ url('master-client/'.$v->id.'/edit') }}">Edit</a></li>
-
-                            <form method="post" action="{{ url('master-client', $v->id) }}">
-                                @csrf
-                                @method('delete')
-                                <li><button type="submit" class="dropdown-item">Hapus</button></li>
-                            </form>
-                          </ul>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  @php
-                    $i++;
-                    @endphp
-                    @endforeach
+                 
                   </tbody>
                 </table>
               </div>
@@ -158,10 +126,27 @@
   @section('script')
   <script>
   $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["csv", "excel", "pdf",]
+    // $("#example1").DataTable({
+    //   "responsive": true, "lengthChange": false, "autoWidth": false,
+    //   "buttons": ["csv", "excel", "pdf",]
+    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    $("#datatables").DataTable({
+      processing: true,
+      serverSide: true,
+      responsive: true,
+      buttons: ["csv", "excel", "pdf",],
+      ajax: 'datatables/master-client',
+      columns: [
+        {data: 'id', name: 'id'},
+        {data: 'nama', name: 'nama'},
+        {data: 'email', name: 'email'},
+        {data: 'phone', name: 'phone'},
+        {data: 'gender', name: 'gender'},
+        {data: 'tgl_lahir', name: 'tgl_lahir'}
+      ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MSMSBlast;
 use App\Models\MMasterClient;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -109,6 +110,19 @@ class SMSBlastController extends Controller
             }
         }
         
+    }
+
+    public function serverside()
+    {
+        $query = DB::table('tbl_sms_blast')
+                ->join('tbl_master_client', 'tbl_master_client.id', '=', 'tbl_sms_blast.id_client')
+                ->select('tbl_sms_blast.*', 'tbl_master_client.*')
+                ->get();
+        // $data = DataTables::of($query)->make(true);
+        // echo '<pre>';
+        // var_dump($data);die;
+        // echo '</pre>';
+        return DataTables::of($query)->make(true);
     }
 
     /**

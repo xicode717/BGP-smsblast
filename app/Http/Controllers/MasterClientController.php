@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\MMasterClient;
+use Yajra\DataTables\DataTables;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class MasterClientController extends Controller
@@ -144,6 +145,44 @@ class MasterClientController extends Controller
                 return back()->with('errors', 'Master Client gagal  di ubah');
                endif;
         endif;
+    }
+
+    public function serverside()
+    {
+        // $data = MMasterclient::all();
+        // echo '<pre>';
+        // var_dump($data);die;
+        // echo '</pre>';
+        return DataTables::of(MMasterclient::limit(250))->make(true);
+        
+        // return DataTables::eloquent($data)
+        //         ->addColumns([
+        //             'action' => '<div class="btn-group-vertical">
+        //             <div class="btn-group">
+        //               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        //               </button>
+        //               <ul class="dropdown-menu" style="">
+        //                 <li><a class="dropdown-item" href="#">Edit</a></li>
+
+        //                     <li><button type="submit" class="dropdown-item">Hapus</button></li>
+        //               </ul>
+        //             </div>
+        //           </div>'
+        //         ])
+        //         ->toJson();
+        // $model = MMasterClient::query();
+ 
+        // return DataTables::of($model)
+        //         ->addColumns('action', function($model){
+        //             return '<a href="" > Ubah </a>';
+        //         })
+        //         ->make(true);
+
+        // // Contoh kode yang benar
+        // $dataTable = Datatables::of(MMasterClient::query());
+        
+        // // Menambahkan kolom satu per satu
+        // return $dataTable->addColumn('action', 'Hi');
     }
 
     /**

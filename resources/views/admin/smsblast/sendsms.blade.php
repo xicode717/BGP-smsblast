@@ -81,6 +81,7 @@
         $(function () {
             //Bootstrap Duallistbox
             $('.duallistbox').bootstrapDualListbox()
+            //
         })
     </script>
   @endsection
