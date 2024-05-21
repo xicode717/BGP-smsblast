@@ -27,9 +27,11 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('/master-client', MasterClientController::class);
+Route::post('/master-client/hapus', [App\Http\Controllers\MasterClientController::class, 'hapus'])->name('hapus');
 Route::resource('/smsblast', SMSBlastController::class);
 Route::get('/send/sendsmsview', [App\Http\Controllers\SMSBlastController::class, 'sendsmsview'])->name('sendsmsview');
-Route::post('/smsblast/resend/{phone}', [App\Http\Controllers\SMSBlastController::class, 'resend'])->name('resend');
+// Route::post('/smsblast/resend/{phone}', [App\Http\Controllers\SMSBlastController::class, 'resend'])->name('resend');
+Route::post('/smsblast/resend', [App\Http\Controllers\SMSBlastController::class, 'resend'])->name('resend');
 Route::resource('/users', UsersController::class);
 
 // Datatables Server Side

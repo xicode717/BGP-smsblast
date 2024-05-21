@@ -149,40 +149,35 @@ class MasterClientController extends Controller
 
     public function serverside()
     {
-        // $data = MMasterclient::all();
+        $data = MMasterclient::where('status', 1)->get();
         // echo '<pre>';
         // var_dump($data);die;
         // echo '</pre>';
-        return DataTables::of(MMasterclient::limit(250))->make(true);
-        
-        // return DataTables::eloquent($data)
-        //         ->addColumns([
-        //             'action' => '<div class="btn-group-vertical">
-        //             <div class="btn-group">
-        //               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        //               </button>
-        //               <ul class="dropdown-menu" style="">
-        //                 <li><a class="dropdown-item" href="#">Edit</a></li>
+        // return DataTables::of(MMasterclient::get())->make(true);
+            return datatables()->of($data)
+            ->addColumn('aksi', function($data)
+            {
+                // $button = "<button class='edit btn btn-danger' id='" .$data->id. "' > Ubah </button>";
+                // $button .= "<button class='hapus btn btn-danger' id='" .$data->id. "' > Hapus </button>";
+                $button = "
+                        <div class='btn-group-vertical'>
+                            <div class='btn-group'>
+                            <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+                            </button>
+                            <ul class='dropdown-menu' style=''>
+                                <li><button class='edit dropdown-item' id='".$data->id."'>Edit</button></li>
 
-        //                     <li><button type="submit" class="dropdown-item">Hapus</button></li>
-        //               </ul>
-        //             </div>
-        //           </div>'
-        //         ])
-        //         ->toJson();
-        // $model = MMasterClient::query();
- 
-        // return DataTables::of($model)
-        //         ->addColumns('action', function($model){
-        //             return '<a href="" > Ubah </a>';
-        //         })
-        //         ->make(true);
+                                <li><button class='hapus dropdown-item' id='".$data->id."'>Hapus</button></li>
+                                
+                            </ul>
+                            </div>
+                        </div>
+                        ";
 
-        // // Contoh kode yang benar
-        // $dataTable = Datatables::of(MMasterClient::query());
-        
-        // // Menambahkan kolom satu per satu
-        // return $dataTable->addColumn('action', 'Hi');
+                return $button;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
 
     /**
@@ -191,6 +186,19 @@ class MasterClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    public function hapus(Request $request)
+    {
+        $update = MMasterClient::find($request->id)->update([
+            'status' => '0',
+         ]);
+          if($update) :
+            return response()->json(['status' => true, 'message' => 'Client berhasil di Hapus'], 200);
+           else :
+            return response()->json(['status' => false, 'message' => 'Client gagal di hapus'], 400);
+           endif;
+    }
+
     public function destroy($id)
     {
         if(MMasterClient::find($id)->delete()) :

@@ -44,7 +44,7 @@
                     <th>Phone</th>
                     <th>Gender</th>
                     <th>Tgl Lahir</th>
-                    <!-- <th>Opsi</th> -->
+                    <th>Opsi</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -143,9 +143,15 @@
         {data: 'email', name: 'email'},
         {data: 'phone', name: 'phone'},
         {data: 'gender', name: 'gender'},
-        {data: 'tgl_lahir', name: 'tgl_lahir'}
+        {data: 'tgl_lahir', name: 'tgl_lahir'},
+        {data: 'aksi', name: 'aksi'},
       ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    // $(".edit").on('click','.edit', function(){
+    //     let id = $(this).attr('id')
+    //     console.log(id)
+    // })
 
     $('#example2').DataTable({
       "paging": true,
@@ -157,5 +163,52 @@
       "responsive": true,
     });
   });
+
+  // pindah ke halaman edit
+  $(document).on('click','.edit', function(){
+        let id = $(this).attr('id')
+        console.log(id)
+        let url = 'master-client/' + id + '/edit'
+        window.location.href = url;
+  });
+
+  $(document).on('click','.hapus', function(){
+        // variable toast
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+        // end
+        let id = $(this).attr('id')
+        console.log(id)
+        $.ajax({
+          url: "{{ route('hapus') }}",
+          type: 'post',
+          data: {
+            id: id,
+            "_token": "{{csrf_token()}}",
+          },
+          success: function(params){
+            if(params.status == true){
+              Toast.fire({
+                icon: 'success',
+                title: params.message
+              });
+              $("#datatables").DataTable().ajax.reload();
+            }else{
+              Toast.fire({
+                icon: 'error',
+                title: params.message
+              });
+              $("#datatables").DataTable().ajax.reload();
+            }
+            
+          }
+        })
+  });
+
+
 </script>
   @endsection

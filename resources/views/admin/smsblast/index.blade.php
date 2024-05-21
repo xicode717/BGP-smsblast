@@ -42,7 +42,7 @@
                     <th>Phone</th>
                     <th>Pesan</th>
                     <th>Tgl Kirim</th>
-                    <!-- <th>Opsi</th> -->
+                    <th>Opsi</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -85,18 +85,50 @@
         {data: 'phone', name: 'phone'},
         {data: 'pesan', name: 'pesan'},
         {data: 'tgl_kirim', name: 'tgl_kirim'},
+        {data: 'aksi', name: 'aksi'},
       ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
+    
   });
+
+  $(document).on('click','.resend', function(){
+        // variable toast
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+        // end
+        let id = $(this).attr('id')
+        console.log(id)
+        $.ajax({
+          url: "{{ route('resend') }}",
+          type: 'post',
+          data: {
+            id: id,
+            "_token": "{{csrf_token()}}",
+          },
+          success: function(params){
+            console.log(params);
+            if(params.status == true){
+              Toast.fire({
+                icon: 'success',
+                title: params.message
+              });
+              $("#datatables").DataTable().ajax.reload();
+            }else{
+              Toast.fire({
+                icon: 'error',
+                title: params.message
+              });
+              $("#datatables").DataTable().ajax.reload();
+            }
+            
+          }
+        })
+  });
+
 </script>
   @endsection

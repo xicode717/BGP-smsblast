@@ -84,14 +84,43 @@ class SMSBlastController extends Controller
          return back();
     }
 
-    public function resend($id)
+    // public function resend($id)
+    // {
+    //     if(empty($id))
+    //     {
+    //         Alert::error('Gagal!', 'Tidak ada data');
+    //     }
+    //     else{
+    //         $data = MSMSBlast::find($id);
+    //         $create = MSMSBlast::create([
+    //             'id_client'     => $data['id_client'],
+    //             'phone'         => $data['phone'],
+    //             'pesan'         => $data['pesan'],
+    //             'tgl_kirim'     => date('Y-m-d'),
+    //             'status'        => 1,
+    //             'created_at'    => date('Y-m-d H:i:s'),
+    //             'udpated_at'    => null
+    //         ]);
+    //         $this->sendwa($data['phone'], $data['pesan']);
+    //         if($create)
+    //         {
+    //             Alert::success('Berhasil!', 'Pesan berhasil di resend');
+    //         }else{
+    //             Alert::error('Gagal', 'Pesan sedang dalam kendala');
+    //         }
+    //     }
+        
+    // }
+
+    public function resend(Request $request)
     {
-        if(empty($id))
+        if(empty($request->id))
         {
-            Alert::error('Gagal!', 'Tidak ada data');
+            // Alert::error('Gagal!', 'Tidak ada data');
+            return response()->json(['status' => false, 'message' => 'Data tidak ada'], 400);
         }
         else{
-            $data = MSMSBlast::find($id);
+            $data = MSMSBlast::find($request->id);
             $create = MSMSBlast::create([
                 'id_client'     => $data['id_client'],
                 'phone'         => $data['phone'],
@@ -104,9 +133,9 @@ class SMSBlastController extends Controller
             $this->sendwa($data['phone'], $data['pesan']);
             if($create)
             {
-                Alert::success('Berhasil!', 'Pesan berhasil di resend');
+                return response()->json(['status' => true, 'message' => 'WA berhasil di Resend'], 200);
             }else{
-                Alert::error('Gagal', 'Pesan sedang dalam kendala');
+                return response()->json(['status' => false, 'message' => 'WA berhasil di Resend'], 400);
             }
         }
         
@@ -114,15 +143,31 @@ class SMSBlastController extends Controller
 
     public function serverside()
     {
-        $query = DB::table('tbl_sms_blast')
+        $data = DB::table('tbl_sms_blast')
                 ->join('tbl_master_client', 'tbl_master_client.id', '=', 'tbl_sms_blast.id_client')
-                ->select('tbl_sms_blast.*', 'tbl_master_client.*')
+                ->select('tbl_sms_blast.id as id','tbl_sms_blast.*', 'tbl_master_client.nama')
                 ->get();
-        // $data = DataTables::of($query)->make(true);
-        // echo '<pre>';
-        // var_dump($data);die;
-        // echo '</pre>';
-        return DataTables::of($query)->make(true);
+        return datatables()->of($data)
+            ->addColumn('aksi', function($data)
+            {
+                // $button = "<button class='edit btn btn-danger' id='" .$data->id. "' > Ubah </button>";
+                // $button .= "<button class='hapus btn btn-danger' id='" .$data->id. "' > Hapus </button>";
+                $button = "
+                        <div class='btn-group-vertical'>
+                            <div class='btn-group'>
+                            <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+                            </button>
+                            <ul class='dropdown-menu' style=''>
+                                <li><button class='resend dropdown-item' id='".$data->id."'> Resend </button></li>
+                            </ul>
+                            </div>
+                        </div>
+                        ";
+
+                return $button;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
 
     /**
