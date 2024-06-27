@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasterClientController;
 use App\Http\Controllers\SMSBlastController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UserDeviceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,10 +34,12 @@ Route::get('/send/sendsmsview', [App\Http\Controllers\SMSBlastController::class,
 // Route::post('/smsblast/resend/{phone}', [App\Http\Controllers\SMSBlastController::class, 'resend'])->name('resend');
 Route::post('/smsblast/resend', [App\Http\Controllers\SMSBlastController::class, 'resend'])->name('resend');
 Route::resource('/users', UsersController::class);
+Route::resource('/userdevices', UserDeviceController::class);
 
 // Datatables Server Side
 Route::get('/datatables/smsblast', [App\Http\Controllers\SMSBlastController::class, 'serverside'])->name('serverside');
 Route::get('/datatables/master-client', [App\Http\Controllers\MasterClientController::class, 'serverside'])->name('serverside');
+Route::get('/datatables/userdevices', [App\Http\Controllers\UserDeviceController::class, 'serverside'])->name('serverside');
 // end Datatables Server Side
 
 Route::get('/logout', function(){

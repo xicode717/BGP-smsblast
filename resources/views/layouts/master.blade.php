@@ -224,6 +224,12 @@
                   <p>Master Client</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ url('userdevices') }}" class="nav-link {{Request::is('userdevices') ? 'active' : ''}}">
+                  <i class="fa fa-users nav-icon"></i>
+                  <p>Master Devices Gateway</p>
+                </a>
+              </li>
             </ul>
           </li>
           <li class="nav-item">
